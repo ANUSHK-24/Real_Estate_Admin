@@ -129,3 +129,14 @@ export const getAllFav=asyncHandler(async(req,res)=>{
         throw new Error(err.message)
     }
 })
+
+export const getContacts = asyncHandler(async (req, res) => {
+  try {
+    const contacts = await prisma.contact.findMany({
+      orderBy: { createdAt: "desc" } // newest first
+    });
+    res.status(200).json(contacts);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch contacts", error: err.message });
+  }
+});
