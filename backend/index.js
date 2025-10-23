@@ -225,7 +225,7 @@ const app = express();
 const corsOptions = {
   origin: [
     "http://localhost:5173",                      // local dev
-    "https://real-estate-admin.vercel.app"        // your deployed frontend URL
+     "https://real-estate-admin-3whv.vercel.app"    // your deployed frontend URL
   ],
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
