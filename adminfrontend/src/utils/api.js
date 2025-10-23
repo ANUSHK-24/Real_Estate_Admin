@@ -19,7 +19,7 @@ import { toast } from "react-toastify"
 
 
 export const api = axios.create({
-  baseURL: "https://real-estate-backend.vercel.app/api", // your deployed backend
+ baseURL: "https://real-estate-admin2.vercel.app/api", // your deployed backend
   withCredentials: true,
   headers: {
     "Content-Type": "application/json"
