@@ -9,13 +9,23 @@ import { toast } from "react-toastify"
 //         'Content-Type': 'application/json'
 //     }
 // });
+// export const api = axios.create({
+//     baseURL: "http://localhost:3000/api",
+//     withCredentials: true,
+//     headers: {
+//         'Content-Type': 'application/json'
+//     }
+// });
+
+
 export const api = axios.create({
-    baseURL: "http://localhost:3000/api",
-    withCredentials: true,
-    headers: {
-        'Content-Type': 'application/json'
-    }
+  baseURL: "https://real-estate-backend.vercel.app/api", // your deployed backend
+  withCredentials: true,
+  headers: {
+    "Content-Type": "application/json"
+  }
 });
+
 
 
 
