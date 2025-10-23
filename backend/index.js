@@ -161,6 +161,56 @@
 // // ✅ Export app for Vercel serverless deployment
 // export default app;
 
+// import express from "express";
+// import dotenv from "dotenv";
+// import cors from "cors";
+// import cookieParser from "cookie-parser";
+// import { userRoute } from "./routes/userRoute.js";
+// import { residencyRoute } from "./routes/residencyRoute.js";
+
+// dotenv.config();
+// const app = express();
+
+// // ✅ CORS configuration for frontend (Vite) on port 5173
+// const corsOptions = {
+//   origin: ["http://localhost:5173"], // your frontend app
+//   credentials: true,
+//   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+//   allowedHeaders: ["Content-Type", "Authorization"],
+// };
+
+// // ✅ Middleware
+// app.use(cors(corsOptions));
+// app.use(express.json());
+// app.use(cookieParser());
+
+// // ✅ Routes
+// app.use("/api/user", userRoute);
+// app.use("/api/residency", residencyRoute);
+
+// // ✅ Health check route
+// app.get("/health", (req, res) => {
+//   res.status(200).json({ status: "ok" });
+// });
+
+// // ✅ Error handler
+// app.use((err, req, res, next) => {
+//   const statusCode = err.statusCode || 500;
+//   const message = err.message || "Internal Server Error";
+//   return res.status(statusCode).json({
+//     success: false,
+//     statusCode,
+//     message,
+//   });
+// });
+
+// // ✅ Start local server on port 3000 (from .env or default)
+// const PORT = process.env.PORT || 3000;
+// app.listen(PORT, () => {
+//   console.log(`✅ Server running on http://localhost:${PORT}`);
+// });
+
+
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -171,9 +221,12 @@ import { residencyRoute } from "./routes/residencyRoute.js";
 dotenv.config();
 const app = express();
 
-// ✅ CORS configuration for frontend (Vite) on port 5173
+// ✅ CORS configuration (allow frontend both local + deployed)
 const corsOptions = {
-  origin: ["http://localhost:5173"], // your frontend app
+  origin: [
+    "http://localhost:5173",                      // local dev
+    "https://real-estate-admin.vercel.app"        // your deployed frontend URL
+  ],
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
@@ -188,7 +241,7 @@ app.use(cookieParser());
 app.use("/api/user", userRoute);
 app.use("/api/residency", residencyRoute);
 
-// ✅ Health check route
+// ✅ Health check
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok" });
 });
@@ -204,8 +257,13 @@ app.use((err, req, res, next) => {
   });
 });
 
-// ✅ Start local server on port 3000 (from .env or default)
+// ✅ Only listen locally (Vercel handles this automatically)
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`✅ Server running on http://localhost:${PORT}`);
-});
+if (process.env.NODE_ENV !== "production") {
+  app.listen(PORT, () => {
+    console.log(`✅ Server running locally at http://localhost:${PORT}`);
+  });
+}
+
+// ✅ Important for Vercel
+export default app;
