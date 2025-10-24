@@ -183,6 +183,7 @@ import Listing from './pages/Delete_Property'
 import Property from './pages/Property'
 import AddPropertyModal from "./components/AddPropertyModal"; 
 import Contact from './pages/Contact'
+import Bookings from './pages/Bookings'
 import AdminLogin from './components/AdminLogin'  // <-- import AdminLogin
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
@@ -228,6 +229,7 @@ const App = () => {
                 </Route>
                 <Route path='/' element={<Contact />} />
                 <Route path="/AddPropertyModal" element={<AddPropertyModal />} />
+                <Route path='/Bookings' element={<Bookings />} />
               </Route>
             </Routes>
           </Suspense>

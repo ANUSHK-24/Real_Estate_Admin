@@ -116,3 +116,21 @@ export const deleteResidencyApi = async (id) => {
         throw err;
     }
 };
+
+
+// Fetch all bookings for admin
+export const getAllBookings = async () => {
+  try {
+    const response = await api.get("/user/allUserBookings", { timeout: 10 * 1000 });
+
+    if (response.status === 400 || response.status === 500) {
+      throw response.data;
+    }
+
+    return response.data.reverse(); // optional: newest first
+  } catch (error) {
+    console.error("Error fetching bookings:", error);
+    toast.error("Failed to fetch bookings");
+    throw error;
+  }
+};

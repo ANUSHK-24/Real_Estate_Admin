@@ -140,3 +140,36 @@ export const getContacts = asyncHandler(async (req, res) => {
     res.status(500).json({ message: "Failed to fetch contacts", error: err.message });
   }
 });
+
+
+export const getAllUserBookings = asyncHandler(async (req, res) => {
+  try {
+    const users = await prisma.user.findMany({
+      select: {
+        _id: true,
+        name: true,
+        email: true,
+        phoneNumber: true,
+        bookedVisits: true,
+      },
+    });
+
+    const allBookings = [];
+    users.forEach(user => {
+      user.bookedVisits.forEach(visit => {
+        allBookings.push({
+          userId: user._id,
+          name: user.name,
+          email: user.email,
+          phoneNumber: user.phoneNumber,
+          bookingId: visit.id,
+          date: visit.date,
+        });
+      });
+    });
+
+    res.status(200).json(allBookings);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch all bookings", error: err.message });
+  }
+});
