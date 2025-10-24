@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Searchbar from "../components/Searchbar1"; // reuse your existing search bar
+import Searchbar from "../components/Searchbar1"; // your existing searchbar
 import { PuffLoader } from "react-spinners";
 import { getAllBookings } from "../utils/api";
 import dayjs from "dayjs";
@@ -40,7 +40,7 @@ const BookingCard = ({ booking }) => {
   );
 };
 
-const AdminBookings = () => {
+const Bookings = () => {
   const [bookings, setBookings] = useState([]);
   const [filter, setFilter] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -68,7 +68,8 @@ const AdminBookings = () => {
       </div>
     );
 
-  if (isError) return <div className="text-center mt-24 text-red-500">Error fetching bookings</div>;
+  if (isError)
+    return <div className="text-center mt-24 text-red-500">Error fetching bookings</div>;
 
   const filteredBookings = bookings.filter(
     (b) =>
@@ -87,7 +88,9 @@ const AdminBookings = () => {
           {filteredBookings.length === 0 ? (
             <p className="col-span-full text-center text-gray-500">No bookings found</p>
           ) : (
-            filteredBookings.map((booking) => <BookingCard key={booking.bookingId} booking={booking} />)
+            filteredBookings.map((booking) => (
+              <BookingCard key={booking.bookingId} booking={booking} />
+            ))
           )}
         </div>
       </div>
@@ -95,4 +98,5 @@ const AdminBookings = () => {
   );
 };
 
-export default AdminBookings;
+export default Bookings;
+

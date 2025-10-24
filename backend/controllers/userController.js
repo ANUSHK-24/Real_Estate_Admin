@@ -146,30 +146,37 @@ export const getAllUserBookings = asyncHandler(async (req, res) => {
   try {
     const users = await prisma.user.findMany({
       select: {
-        _id: true,
+        id: true,             // Prisma field, maps to MongoDB _id
         name: true,
         email: true,
-        phoneNumber: true,
-        bookedVisits: true,
+        phoneNumber: true,    // optional, if exists
+        bookedVisits: true,   // Json[]
       },
     });
 
     const allBookings = [];
+
     users.forEach(user => {
-      user.bookedVisits.forEach(visit => {
-        allBookings.push({
-          userId: user._id,
-          name: user.name,
-          email: user.email,
-          phoneNumber: user.phoneNumber,
-          bookingId: visit.id,
-          date: visit.date,
+      if (Array.isArray(user.bookedVisits)) {
+        user.bookedVisits.forEach(visit => {
+          allBookings.push({
+            userId: user.id,
+            name: user.name || "N/A",
+            email: user.email,
+            phoneNumber: user.phoneNumber || "N/A",
+            bookingId: visit.id,
+            date: visit.date,
+          });
         });
-      });
+      }
     });
+
+    // Sort upcoming bookings first
+    allBookings.sort((a, b) => new Date(a.date) - new Date(b.date));
 
     res.status(200).json(allBookings);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Failed to fetch all bookings", error: err.message });
   }
 });
