@@ -100,43 +100,503 @@
 
 // export default Bookings;
 
+// import React, { useEffect, useState } from "react";
+// import { PuffLoader } from "react-spinners";
+// import { getAllBookings } from "../utils/api"; // your backend API function
+
+// const Bookings = () => {
+//   const [bookings, setBookings] = useState([]);
+//   const [groupedBookings, setGroupedBookings] = useState({});
+//   const [isLoading, setIsLoading] = useState(true);
+//   const [isError, setIsError] = useState(false);
+
+//   useEffect(() => {
+//     const fetchBookings = async () => {
+//       try {
+//         const data = await getAllBookings();
+//         setBookings(data);
+
+//         // Group bookings by userId
+//         const grouped = data.reduce((acc, booking) => {
+//           if (!acc[booking.userId]) {
+//             acc[booking.userId] = {
+//               name: booking.name,
+//               email: booking.email,
+//               phoneNumber: booking.phoneNumber,
+//               bookings: [],
+//             };
+//           }
+//           acc[booking.userId].bookings.push({
+//             bookingId: booking.bookingId,
+//             date: booking.date,
+//           });
+//           return acc;
+//         }, {});
+
+//         setGroupedBookings(grouped);
+//         setIsLoading(false);
+//       } catch (err) {
+//         console.error(err);
+//         setIsError(true);
+//         setIsLoading(false);
+//       }
+//     };
+
+//     fetchBookings();
+//   }, []);
+
+//   if (isError)
+//     return (
+//       <div className="text-center mt-20 text-red-500 text-lg">
+//         ❌ Failed to fetch bookings. Please try again later.
+//       </div>
+//     );
+
+//   if (isLoading)
+//     return (
+//       <div className="h-64 flex justify-center items-center">
+//         <PuffLoader color="#555" />
+//       </div>
+//     );
+
+//   const groupedEntries = Object.entries(groupedBookings);
+
+//   return (
+//     <main className="my-16 px-6 lg:px-16">
+//       <h1 className="text-3xl font-bold text-center mb-10 text-gray-800">
+//         🏡 All User Bookings
+//       </h1>
+
+//       {groupedEntries.length === 0 ? (
+//         <p className="text-center text-gray-500">No bookings available.</p>
+//       ) : (
+//         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+//           {groupedEntries.map(([userId, user]) => (
+//             <div
+//               key={userId}
+//               className="p-6 rounded-2xl shadow-lg bg-white border border-gray-100 hover:shadow-2xl transition-all duration-300"
+//             >
+//               <h2 className="text-xl font-semibold text-gray-800 mb-2">
+//                 {user.name || "Unknown User"}
+//               </h2>
+//               <p className="text-gray-600 text-sm mb-1">
+//                 📧 {user.email || "No Email"}
+//               </p>
+//               <p className="text-gray-600 text-sm mb-3">
+//                 📞 {user.phoneNumber || "No Phone"}
+//               </p>
+
+//               <div className="bg-gray-50 p-3 rounded-lg max-h-40 overflow-y-auto">
+//                 <h3 className="text-sm font-semibold text-gray-700 mb-2">
+//                   Bookings:
+//                 </h3>
+//                 {user.bookings.map((b, index) => (
+//                   <div
+//                     key={`${b.bookingId}-${index}`}
+//                     className="flex items-center justify-between bg-white shadow-sm px-3 py-2 rounded-md mb-2 border border-gray-100"
+//                   >
+//                     <span className="text-gray-700 text-sm font-medium">
+//                       📅 {b.date}
+//                     </span>
+//                     <span className="text-gray-400 text-xs">
+//                       #{b.bookingId.slice(-6)}
+//                     </span>
+//                   </div>
+//                 ))}
+//               </div>
+//             </div>
+//           ))}
+//         </div>
+//       )}
+//     </main>
+//   );
+// };
+
+// export default Bookings;
+
+// import React, { useEffect, useState } from "react";
+// import { PuffLoader } from "react-spinners";
+// import { getAllBookings, getProperty } from "../utils/api"; // use getProperty here
+
+// const Bookings = () => {
+//   const [bookings, setBookings] = useState([]);
+//   const [groupedBookings, setGroupedBookings] = useState({});
+//   const [isLoading, setIsLoading] = useState(true);
+//   const [isError, setIsError] = useState(false);
+
+//   useEffect(() => {
+//     const fetchBookings = async () => {
+//       try {
+//         const data = await getAllBookings();
+
+//         // For each booking, fetch the residency info using getProperty
+//         const bookingsWithResidency = await Promise.all(
+//           data.map(async (b) => {
+//             let residency = { title: "Unknown", media: [] };
+//             try {
+//               if (b.residencyId) {
+//                 residency = await getProperty(b.residencyId);
+//               }
+//             } catch (err) {
+//               console.warn("Failed to fetch residency:", err);
+//             }
+//             return {
+//               ...b,
+//               residencyTitle: residency.title,
+//               residencyImage:
+//                 Array.isArray(residency.media) && residency.media.length > 0
+//                   ? residency.media[0]
+//                   : null,
+//             };
+//           })
+//         );
+
+//         // Group by userId
+//         const grouped = bookingsWithResidency.reduce((acc, booking) => {
+//           if (!acc[booking.userId]) {
+//             acc[booking.userId] = {
+//               name: booking.name,
+//               email: booking.email,
+//               phoneNumber: booking.phoneNumber,
+//               bookings: [],
+//             };
+//           }
+//           acc[booking.userId].bookings.push({
+//             bookingId: booking.bookingId,
+//             date: booking.date,
+//             residencyTitle: booking.residencyTitle,
+//             residencyImage: booking.residencyImage,
+//           });
+//           return acc;
+//         }, {});
+
+//         setGroupedBookings(grouped);
+//         setIsLoading(false);
+//       } catch (err) {
+//         console.error(err);
+//         setIsError(true);
+//         setIsLoading(false);
+//       }
+//     };
+
+//     fetchBookings();
+//   }, []);
+
+//   if (isError)
+//     return (
+//       <div className="text-center mt-20 text-red-500 text-lg">
+//         ❌ Failed to fetch bookings. Please try again later.
+//       </div>
+//     );
+
+//   if (isLoading)
+//     return (
+//       <div className="h-64 flex justify-center items-center">
+//         <PuffLoader color="#555" />
+//       </div>
+//     );
+
+//   const groupedEntries = Object.entries(groupedBookings);
+
+//   return (
+//     <main className="my-16 px-6 lg:px-16">
+//       <h1 className="text-3xl font-bold text-center mb-10 text-gray-800">
+//         🏡 All User Bookings
+//       </h1>
+
+//       {groupedEntries.length === 0 ? (
+//         <p className="text-center text-gray-500">No bookings available.</p>
+//       ) : (
+//         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+//           {groupedEntries.map(([userId, user]) => (
+//             <div
+//               key={userId}
+//               className="p-6 rounded-2xl shadow-lg bg-white border border-gray-100 hover:shadow-2xl transition-all duration-300"
+//             >
+//               <h2 className="text-xl font-semibold text-gray-800 mb-2">
+//                 {user.name || "Unknown User"}
+//               </h2>
+//               <p className="text-gray-600 text-sm mb-3">
+//                 📞 {user.phoneNumber || "No Phone"}
+//               </p>
+
+//               <div className="bg-gray-50 p-3 rounded-lg max-h-60 overflow-y-auto">
+//                 <h3 className="text-sm font-semibold text-gray-700 mb-2">
+//                   Bookings:
+//                 </h3>
+//                 {user.bookings.map((b, index) => (
+//                   <div
+//                     key={`${b.bookingId}-${index}`}
+//                     className="flex flex-col bg-white shadow-sm px-3 py-2 rounded-md mb-3 border border-gray-100"
+//                   >
+//                     <span className="text-gray-700 text-sm font-medium mb-1">
+//                       📅 {b.date}
+//                     </span>
+//                     <span className="text-gray-800 font-medium">
+//                       🏠 {b.residencyTitle}
+//                     </span>
+//                     {b.residencyImage && (
+//                       <img
+//                         src={b.residencyImage}
+//                         alt={b.residencyTitle}
+//                         className="mt-2 rounded-md max-h-32 object-cover"
+//                       />
+//                     )}
+//                   </div>
+//                 ))}
+//               </div>
+//             </div>
+//           ))}
+//         </div>
+//       )}
+//     </main>
+//   );
+// };
+
+// export default Bookings;
+
+
+// import React, { useEffect, useState } from "react";
+// import { PuffLoader } from "react-spinners";
+// import { getAllBookings, getProperty } from "../utils/api"; // your backend API functions
+
+// const Bookings = () => {
+//   const [bookings, setBookings] = useState([]);
+//   const [groupedBookings, setGroupedBookings] = useState({});
+//   const [isLoading, setIsLoading] = useState(true);
+//   const [isError, setIsError] = useState(false);
+
+//   useEffect(() => {
+//     const fetchBookings = async () => {
+//       try {
+//         const data = await getAllBookings();
+
+//         // Fetch residency info for each booking
+//         const bookingsWithResidency = await Promise.all(
+//           data.map(async (b) => {
+//             let residencyTitle = "Unknown";
+//             let residencyImage = null;
+
+//             try {
+//               const residency = await getProperty(b.residencyId); // your existing getProperty function
+//               residencyTitle = residency.title || "Unknown";
+//               residencyImage = residency.media?.[0] || null; // first image
+//             } catch (err) {
+//               console.error(`Failed to fetch residency for booking ${b.bookingId}`, err);
+//             }
+
+//             return {
+//               ...b,
+//               residencyTitle,
+//               residencyImage,
+//             };
+//           })
+//         );
+
+//         // Group by userId
+//         const grouped = bookingsWithResidency.reduce((acc, booking) => {
+//           if (!acc[booking.userId]) {
+//             acc[booking.userId] = {
+//               name: booking.name,
+//               email: booking.email,
+//               bookings: [],
+//             };
+//           }
+
+//           acc[booking.userId].bookings.push({
+//             bookingId: booking.bookingId,
+//             date: booking.date,
+//             phoneNumber: booking.phoneNumber,
+//             residencyTitle: booking.residencyTitle,
+//             residencyImage: booking.residencyImage,
+//           });
+
+//           return acc;
+//         }, {});
+
+//         setGroupedBookings(grouped);
+//         setIsLoading(false);
+//       } catch (err) {
+//         console.error("❌ Failed to fetch bookings:", err);
+//         setIsError(true);
+//         setIsLoading(false);
+//       }
+//     };
+
+//     fetchBookings();
+//   }, []);
+
+//   if (isError)
+//     return (
+//       <div className="text-center mt-20 text-red-500 text-lg">
+//         ❌ Failed to fetch bookings. Please try again later.
+//       </div>
+//     );
+
+//   if (isLoading)
+//     return (
+//       <div className="h-64 flex justify-center items-center">
+//         <PuffLoader color="#555" />
+//       </div>
+//     );
+
+//   const groupedEntries = Object.entries(groupedBookings);
+
+//   return (
+//     <main className="my-16 px-6 lg:px-16 bg-gray-50 min-h-screen">
+//       <h1 className="text-3xl font-bold text-center mb-10 text-gray-800">
+//         🏡 All User Bookings
+//       </h1>
+
+//       {groupedEntries.length === 0 ? (
+//         <p className="text-center text-gray-500">No bookings available.</p>
+//       ) : (
+//         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+//           {groupedEntries.map(([userId, user]) => (
+//             <div
+//               key={userId}
+//               className="p-6 rounded-2xl shadow-lg bg-white border border-gray-100 hover:shadow-2xl transition-all duration-300"
+//             >
+//               <h2 className="text-xl font-semibold text-gray-800 mb-3">
+//                 {user.name || "Unknown User"}
+//               </h2>
+//               <p className="text-gray-600 text-sm mb-4">📧 {user.email || "No Email"}</p>
+
+//               <div className="flex flex-col gap-3 max-h-96 overflow-y-auto">
+//                 {user.bookings.map((b, index) => (
+//                   <div
+//                     key={`${b.bookingId}-${index}`}
+//                     className="flex flex-col bg-gray-50 shadow-sm px-3 py-2 rounded-md border border-gray-200"
+//                   >
+//                     <span className="text-gray-700 text-sm font-medium mb-1">
+//                       📅 {b.date}
+//                     </span>
+//                     <span className="text-gray-600 text-sm mb-1">
+//                       📞 {b.phoneNumber || "No Phone"}
+//                     </span>
+//                     <span className="text-gray-800 font-medium mb-1">
+//                       🏠 {b.residencyTitle}
+//                     </span>
+//                     {b.residencyImage && (
+//                       <img
+//                         src={b.residencyImage}
+//                         alt={b.residencyTitle}
+//                         className="rounded-md max-h-32 object-cover mt-1"
+//                       />
+//                     )}
+//                   </div>
+//                 ))}
+//               </div>
+//             </div>
+//           ))}
+//         </div>
+//       )}
+//     </main>
+//   );
+// };
+
+// export default Bookings;
+
+
 import React, { useEffect, useState } from "react";
 import { PuffLoader } from "react-spinners";
-import { getAllBookings } from "../utils/api"; // your backend API function
+import { getAllBookings, getProperty } from "../utils/api";
+
 
 const Bookings = () => {
-  const [bookings, setBookings] = useState([]);
   const [groupedBookings, setGroupedBookings] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
+
 
   useEffect(() => {
     const fetchBookings = async () => {
       try {
         const data = await getAllBookings();
-        setBookings(data);
+        
+        console.log("📦 Raw API Response:", data);
 
-        // Group bookings by userId
-        const grouped = data.reduce((acc, booking) => {
+        // Check if data is valid
+        if (!Array.isArray(data) || data.length === 0) {
+          console.warn("⚠️ No bookings data received");
+          setIsLoading(false);
+          return;
+        }
+
+        // The API already returns flattened bookings
+        // bookingId is actually the residency ID
+        const allBookings = data.map(booking => ({
+          userId: booking.userId,
+          name: booking.name,
+          email: booking.email,
+          residencyId: booking.bookingId, // bookingId is the residency ID
+          date: booking.date,
+          phoneNumber: booking.phoneNumber || "N/A"
+        }));
+
+        console.log("📋 Processed bookings:", allBookings);
+
+        // Filter out bookings without residencyId
+        const validBookings = allBookings.filter(b => {
+          if (!b.residencyId) {
+            console.warn("⚠️ Skipping booking without residencyId:", b);
+            return false;
+          }
+          return true;
+        });
+
+        console.log("✅ Valid bookings to process:", validBookings.length);
+
+        // Fetch residency info for each booking
+        const bookingsWithResidency = await Promise.all(
+          validBookings.map(async (b) => {
+            let residencyTitle = "Unknown";
+            let residencyImage = null;
+
+            try {
+              console.log(`🔍 Fetching residency: ${b.residencyId}`);
+              const residency = await getProperty(b.residencyId);
+              residencyTitle = residency.title || "Unknown";
+              residencyImage = residency.media?.[0] || null;
+              console.log(`✅ Fetched: ${residencyTitle}`);
+            } catch (err) {
+              console.error(`❌ Failed to fetch residency ${b.residencyId}:`, err.message);
+            }
+
+            return {
+              ...b,
+              residencyTitle,
+              residencyImage,
+            };
+          })
+        );
+
+        // Group by userId
+        const grouped = bookingsWithResidency.reduce((acc, booking) => {
           if (!acc[booking.userId]) {
             acc[booking.userId] = {
               name: booking.name,
               email: booking.email,
-              phoneNumber: booking.phoneNumber,
               bookings: [],
             };
           }
+
           acc[booking.userId].bookings.push({
-            bookingId: booking.bookingId,
+            residencyId: booking.residencyId,
             date: booking.date,
+            phoneNumber: booking.phoneNumber,
+            residencyTitle: booking.residencyTitle,
+            residencyImage: booking.residencyImage,
           });
+
           return acc;
         }, {});
 
+        console.log("✅ Grouped bookings:", grouped);
         setGroupedBookings(grouped);
         setIsLoading(false);
       } catch (err) {
-        console.error(err);
+        console.error("❌ Failed to fetch bookings:", err);
         setIsError(true);
         setIsLoading(false);
       }
@@ -145,12 +605,14 @@ const Bookings = () => {
     fetchBookings();
   }, []);
 
+
   if (isError)
     return (
       <div className="text-center mt-20 text-red-500 text-lg">
         ❌ Failed to fetch bookings. Please try again later.
       </div>
     );
+
 
   if (isLoading)
     return (
@@ -159,13 +621,16 @@ const Bookings = () => {
       </div>
     );
 
+
   const groupedEntries = Object.entries(groupedBookings);
 
+
   return (
-    <main className="my-16 px-6 lg:px-16">
+    <main className="my-16 px-6 lg:px-16 bg-gray-50 min-h-screen">
       <h1 className="text-3xl font-bold text-center mb-10 text-gray-800">
         🏡 All User Bookings
       </h1>
+
 
       {groupedEntries.length === 0 ? (
         <p className="text-center text-gray-500">No bookings available.</p>
@@ -176,31 +641,34 @@ const Bookings = () => {
               key={userId}
               className="p-6 rounded-2xl shadow-lg bg-white border border-gray-100 hover:shadow-2xl transition-all duration-300"
             >
-              <h2 className="text-xl font-semibold text-gray-800 mb-2">
+              <h2 className="text-xl font-semibold text-gray-800 mb-3">
                 {user.name || "Unknown User"}
               </h2>
-              <p className="text-gray-600 text-sm mb-1">
-                📧 {user.email || "No Email"}
-              </p>
-              <p className="text-gray-600 text-sm mb-3">
-                📞 {user.phoneNumber || "No Phone"}
-              </p>
+              <p className="text-gray-600 text-sm mb-4">📧 {user.email || "No Email"}</p>
 
-              <div className="bg-gray-50 p-3 rounded-lg max-h-40 overflow-y-auto">
-                <h3 className="text-sm font-semibold text-gray-700 mb-2">
-                  Bookings:
-                </h3>
+
+              <div className="flex flex-col gap-3 max-h-96 overflow-y-auto">
                 {user.bookings.map((b, index) => (
                   <div
-                    key={`${b.bookingId}-${index}`}
-                    className="flex items-center justify-between bg-white shadow-sm px-3 py-2 rounded-md mb-2 border border-gray-100"
+                    key={`${b.residencyId}-${index}`}
+                    className="flex flex-col bg-gray-50 shadow-sm px-3 py-2 rounded-md border border-gray-200"
                   >
-                    <span className="text-gray-700 text-sm font-medium">
+                    <span className="text-gray-700 text-sm font-medium mb-1">
                       📅 {b.date}
                     </span>
-                    <span className="text-gray-400 text-xs">
-                      #{b.bookingId.slice(-6)}
+                    <span className="text-gray-600 text-sm mb-1">
+                      📞 {b.phoneNumber || "No Phone"}
                     </span>
+                    <span className="text-gray-800 font-medium mb-1">
+                      🏠 {b.residencyTitle}
+                    </span>
+                    {b.residencyImage && (
+                      <img
+                        src={b.residencyImage}
+                        alt={b.residencyTitle}
+                        className="rounded-md max-h-32 object-cover mt-1"
+                      />
+                    )}
                   </div>
                 ))}
               </div>
@@ -211,5 +679,6 @@ const Bookings = () => {
     </main>
   );
 };
+
 
 export default Bookings;
