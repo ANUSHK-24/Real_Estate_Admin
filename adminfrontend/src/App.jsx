@@ -228,10 +228,10 @@ const App = () => {
                   <Route index element={<Listing />} />
                   <Route path=':propertyId' element={<Property />} />   
                 </Route>
-                <Route path='/' element={<Contact />} />
+                <Route path='/Contact' element={<Contact />} />
                 <Route path="/AddPropertyModal" element={<AddPropertyModal />} />
                 <Route path='/Bookings' element={<Bookings />} />
-                <Route path='/Users' element={<Users />} />
+                <Route path='/' element={<Users />} />
               </Route>
             </Routes>
           </Suspense>
