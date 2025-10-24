@@ -123,8 +123,8 @@ import asyncHandler from "express-async-handler"
 //   }
 // });
 
-export const createResidency = async (data) => {
-  // Destructure and normalize fields
+
+export const createResidency = asyncHandler(async (req, res) => {
   const {
     title = "",
     description = "",
@@ -132,34 +132,46 @@ export const createResidency = async (data) => {
     address = "",
     city = "",
     country = "",
-    facilities = [],
+    facilities = {},
     media = [],
-  } = data;
-
-  // Ensure correct types
-  const safeData = {
-    title,
-    description,
-    price: Number(price), // convert to number
-    address,
-    city,
-    country,
-    facilities: Array.isArray(facilities) ? facilities : [], // always array
-    media: Array.isArray(media) ? media : [], // always array of {url, type}
-  };
-
-  console.log("Sending residency to backend:", safeData);
+  } = req.body;
 
   try {
-    const res = await api.post("/residency/create", safeData);
-    toast.success("Residency created successfully!");
-    return res.data;
+    const residency = await prisma.residency.create({
+      data: {
+        title,
+        description,
+        price: Number(price),
+        address,
+        city,
+        country,
+        facilities,
+        media, // array of {url, type}
+      },
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Residency created successfully",
+      residency,
+    });
   } catch (err) {
     console.error("Error creating residency:", err);
-    toast.error("Something went wrong while creating residency");
-    throw err;
+
+    // Handle unique address constraint error
+    if (err.code === "P2002") {
+      return res.status(400).json({
+        success: false,
+        message: "A residency with this address already exists",
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
-};
+});
 
  export const getAllResidencies=asyncHandler(async(req,res)=>{
     const residencies=await prisma.residency.findMany({
