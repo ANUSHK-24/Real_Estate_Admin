@@ -8,7 +8,9 @@ const Navbar = ({containerStyles}) => {
 
   return (
     <nav className={`${containerStyles}`}>
-        
+        <NavLink to={'/Users'} className={({isActive})=>isActive ? "relative after:w-2/3 after:h-[2px] after:rounded-full after:bg-black after:absolute after:-bottom-2 after:left-0 py-1" :"py-1"}  >
+        Users
+        </NavLink>
         <NavLink to={'/'} className={({isActive})=>isActive ? "relative after:w-2/3 after:h-[2px] after:rounded-full after:bg-black after:absolute after:-bottom-2 after:left-0 py-1" :"py-1"} >
         Contact
         </NavLink>
@@ -21,6 +23,7 @@ const Navbar = ({containerStyles}) => {
         <NavLink to={'/Bookings'} className={({isActive})=>isActive ? "relative after:w-2/3 after:h-[2px] after:rounded-full after:bg-black after:absolute after:-bottom-2 after:left-0 py-1" :"py-1"}  >
         Bookings
         </NavLink>
+      
    
     </nav>
   )

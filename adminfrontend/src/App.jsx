@@ -184,6 +184,7 @@ import Property from './pages/Property'
 import AddPropertyModal from "./components/AddPropertyModal"; 
 import Contact from './pages/Contact'
 import Bookings from './pages/Bookings'
+import Users from './pages/Users'
 import AdminLogin from './components/AdminLogin'  // <-- import AdminLogin
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
@@ -230,6 +231,7 @@ const App = () => {
                 <Route path='/' element={<Contact />} />
                 <Route path="/AddPropertyModal" element={<AddPropertyModal />} />
                 <Route path='/Bookings' element={<Bookings />} />
+                <Route path='/Users' element={<Users />} />
               </Route>
             </Routes>
           </Suspense>

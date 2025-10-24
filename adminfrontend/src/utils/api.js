@@ -134,3 +134,7 @@ export const getAllBookings = async () => {
     throw error;
   }
 };
+export const getAllUsers = async () => {
+  const res = await api.get("/user/all");
+  return res.data;
+};
