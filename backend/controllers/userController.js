@@ -222,22 +222,29 @@ export const getAllUserBookings = asyncHandler(async (req, res) => {
     res.status(500).json({ message: "Failed to fetch all bookings", error: err.message });
   }
 });
-export const getAllUsers = async (req, res) => {
+
+export const getAllUsers = asyncHandler(async (req, res) => {
   try {
     const users = await prisma.user.findMany({
-      orderBy: { createdAt: "desc" },
       select: {
         id: true,
         name: true,
         email: true,
-        createdAt: true,
+        phone: true,
+        createdAt: true, // optional, some might be null
       },
     });
 
-    res.status(200).json(users);
+    // Optional: sort manually by createdAt if it exists
+    const sortedUsers = users.sort((a, b) => {
+      if (!a.createdAt) return 1; // place nulls last
+      if (!b.createdAt) return -1;
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+
+    res.status(200).json(sortedUsers);
   } catch (err) {
-    console.error("❌ Error fetching users:", err.message);
-    console.error("🧠 Full error:", err); // add this for detailed output
-    res.status(500).json({ message: "Failed to fetch users", error: err.message });
+    console.error("❌ Error fetching users:", err);
+    res.status(500).json({ message: "Failed to fetch users" });
   }
-};
+});
