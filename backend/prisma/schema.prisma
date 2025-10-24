@@ -26,7 +26,7 @@ model Residency {
     address     String
     city        String
     country     String
-    image       String
+    media       Json     // Changed from image to media to support multiple images and videos   
     facilities  Json
     userEmail   String?
     owner       User?     @relation("Owner", fields: [userEmail], references: [email])
@@ -46,3 +46,58 @@ model Contact {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+
+// generator client {
+//     provider = "prisma-client-js"
+//     binaryTargets = ["native", "rhel-openssl-1.0.x", "debian-openssl-1.1.x", "linux-musl-openssl-3.0.x", "linux-musl", "rhel-openssl-3.0.x"]
+// }
+
+// datasource db {
+//     provider = "mongodb"
+//     url      = env("DATABASE_URL")
+// }
+
+// model User {
+//     id               String      @id @default(auto()) @map("_id") @db.ObjectId
+//     name             String?
+//     email            String      @unique
+//     password         String?
+//     image            String?
+//     bookedVisits     Json[]
+//     favResidenciesID String[]    @db.ObjectId
+//     ownedResidencies Residency[] @relation("Owner")
+//     contactMessages  Contact[]   @relation("UserContacts")
+//     createdAt        DateTime    @default(now())
+//     updatedAt        DateTime    @updatedAt
+// }
+
+// model Residency {
+//     id          String   @id @default(auto()) @map("_id") @db.ObjectId
+//     title       String
+//     description String
+//     price       Int
+//     address     String
+//     city        String
+//     country     String
+//     media       Json     // Changed from image to media to support multiple images and videos
+//     facilities  Json
+//     ownerId     String   @db.ObjectId
+//     owner       User     @relation("Owner", fields: [ownerId], references: [id])
+//     createdAt   DateTime @default(now())
+//     updatedAt   DateTime @updatedAt
+//    @@unique(fields: [address,ownerId])
+// }
+
+// model Contact {
+//     id        String   @id @default(auto()) @map("_id") @db.ObjectId
+//     name      String
+//     email     String
+//     phone     String?
+//     subject   String
+//     message   String
+//     userId    String   @db.ObjectId
+//     user      User     @relation("UserContacts", fields: [userId], references: [id])
+//     createdAt DateTime @default(now())
+//     updatedAt DateTime @updatedAt
+// }
