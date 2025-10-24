@@ -223,6 +223,7 @@ export const getAllUserBookings = asyncHandler(async (req, res) => {
   }
 });
 
+
 export const getAllUsers = asyncHandler(async (req, res) => {
   try {
     const users = await prisma.user.findMany({
@@ -231,20 +232,13 @@ export const getAllUsers = asyncHandler(async (req, res) => {
         name: true,
         email: true,
         phone: true,
-        createdAt: true, // optional, some might be null
+        // createdAt: true, // remove if it doesn't exist
       },
     });
 
-    // Optional: sort manually by createdAt if it exists
-    const sortedUsers = users.sort((a, b) => {
-      if (!a.createdAt) return 1; // place nulls last
-      if (!b.createdAt) return -1;
-      return new Date(b.createdAt) - new Date(a.createdAt);
-    });
-
-    res.status(200).json(sortedUsers);
+    res.status(200).json(users);
   } catch (err) {
     console.error("❌ Error fetching users:", err);
-    res.status(500).json({ message: "Failed to fetch users" });
+    res.status(500).json({ message: "Failed to fetch users", error: err.message });
   }
 });
