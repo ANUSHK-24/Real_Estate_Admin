@@ -231,7 +231,7 @@ export const getAllUsers = asyncHandler(async (req, res) => {
         id: true,
         name: true,
         email: true,
-        phone: true,
+        
         // createdAt: true, // remove if it doesn't exist
       },
     });
