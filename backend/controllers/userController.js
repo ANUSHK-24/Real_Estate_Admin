@@ -222,7 +222,6 @@ export const getAllUserBookings = asyncHandler(async (req, res) => {
     res.status(500).json({ message: "Failed to fetch all bookings", error: err.message });
   }
 });
-
 export const getAllUsers = async (req, res) => {
   try {
     const users = await prisma.user.findMany({
@@ -231,7 +230,6 @@ export const getAllUsers = async (req, res) => {
         id: true,
         name: true,
         email: true,
-        phone: true,
         createdAt: true,
       },
     });
